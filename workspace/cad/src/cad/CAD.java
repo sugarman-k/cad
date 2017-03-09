@@ -5,6 +5,7 @@ import java.awt.MenuBar;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.awt.Graphics;
 import javax.swing.ButtonGroup;
@@ -14,13 +15,19 @@ import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 
+//import Shapes.textbox;
 
 
-public class CAD extends JFrame {
-	private static final long serialVersionUID=1;
+
+public class CAD extends JFrame implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int width;
 	private int height;
-	
+	public static CAD cad;
 //	private ArrayList<Shape> listShape=new ArrayList<Shape>();
 	
 //	private class ShapePanel extends JPanel{
@@ -111,10 +118,37 @@ public class CAD extends JFrame {
 			}
 			
 		});
+		textButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				paint.getInput();
+				paint.setShape(4);
+				paint.repaint();
+			}
+			
+		});
 		JButton openButton=new JButton("´ò¿ª");
 		JButton saveButton=new JButton("±£´æ");
 		toolBar2.add(openButton);
 		toolBar2.add(saveButton);
+		openButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				paint.openPaint();
+			}
+			
+		});
+		saveButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				paint.savePaint();
+			}
+			
+		});
+		
 		
 		cad.add(paint, BorderLayout.CENTER);
 	  //paint.setPreferredSize(new java.awt.Dimension(640, 450));
