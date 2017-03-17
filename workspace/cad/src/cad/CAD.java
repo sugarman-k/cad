@@ -1,10 +1,13 @@
 package cad;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.MenuBar;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.awt.Graphics;
@@ -79,23 +82,27 @@ public class CAD extends JFrame implements Serializable {
 		JToolBar toolBar2=new JToolBar();
 		cad.add(toolBar1,BorderLayout.EAST);
 		cad.add(toolBar2,BorderLayout.NORTH);
-		//toolBar1.setSize(50, 300);
+		toolBar1.setPreferredSize(new Dimension(56, 180));
 		toolBar1.setOrientation(SwingConstants.VERTICAL);
-		//toolBar2.setSize(75, 20);
+	//	toolBar2
 		toolBar2.setOrientation(SwingConstants.HORIZONTAL);
 		JButton lineButton=new JButton("直线");
 		JButton rectangleButton=new JButton("矩形");
 		JButton circleButton=new JButton("圆形");
 		JButton textButton=new JButton("文字");
+		ColorPanel colorPanel=new ColorPanel();
+//		colorPanel.setPreferredSize(new Dimension(58,100));
 		toolBar1.add(lineButton);
 		toolBar1.add(rectangleButton);
 		toolBar1.add(circleButton);
 		toolBar1.add(textButton);
+		toolBar1.add(colorPanel);
 		lineButton.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
+				paint.unSelected();
 				paint.setShape(1);
 				paint.repaint();			
 			}			
@@ -105,6 +112,7 @@ public class CAD extends JFrame implements Serializable {
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
+				paint.unSelected();
 				paint.setShape(2);
 				paint.repaint();	
 			}		
@@ -112,7 +120,9 @@ public class CAD extends JFrame implements Serializable {
 		circleButton.addActionListener(new ActionListener(){
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) 
+			{
+				paint.unSelected();
 				paint.setShape(3);
 				paint.repaint();		
 			}
@@ -121,10 +131,21 @@ public class CAD extends JFrame implements Serializable {
 		textButton.addActionListener(new ActionListener(){
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
+				paint.unSelected();
 				paint.getInput();
 				paint.setShape(4);
 				paint.repaint();
+			}
+			
+		});
+		colorPanel.addPropertyChangeListener(new PropertyChangeListener(){
+
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				paint.setColor(colorPanel.forwardButton.getBackground());
+				paint.changeColor(colorPanel.forwardButton.getBackground());
 			}
 			
 		});

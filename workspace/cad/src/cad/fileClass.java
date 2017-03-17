@@ -12,7 +12,7 @@ import java.io.Serializable;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-import Shapes.Shape;
+import Shapes.Shapes;
 
 public class fileClass implements Serializable {
 	/**
@@ -46,7 +46,7 @@ public class fileClass implements Serializable {
 			ObjectOutputStream output=new ObjectOutputStream(fos);
 			output.writeInt(paintpanel.listShape.size());
 			for(int i=0;i<paintpanel.listShape.size();i++){
-				Shape a=paintpanel.listShape.get(i);
+				Shapes a=paintpanel.listShape.get(i);
 				output.writeObject(a);
 			}
 			output.close();
@@ -68,9 +68,9 @@ public class fileClass implements Serializable {
 				FileInputStream fis=new FileInputStream(fileName);
 				ObjectInputStream input=new ObjectInputStream(fis);
 				int count=input.readInt();
-				Shape a;
+				Shapes a;
 				for(int i=0;i<count;i++){
-					a=(Shape)input.readObject();
+					a=(Shapes)input.readObject();
 					paintpanel.listShape.add(a);
 				}
 			paintpanel.repaint();
