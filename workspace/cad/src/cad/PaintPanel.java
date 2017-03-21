@@ -2,7 +2,6 @@ package cad;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -10,25 +9,20 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.AffineTransform;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
-
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
 import Shapes.Circle;
 import Shapes.Rectangle;
 import Shapes.Shapes;
 import Shapes.Text;
 import Shapes.line;
-//import Shapes.string;
-//import Shapes.textbox;
 
-public class PaintPanel extends JPanel implements MouseListener,MouseMotionListener,KeyListener, Serializable {
+public class PaintPanel extends JPanel implements MouseListener,MouseMotionListener,KeyListener, Serializable
+{	
 	private static final long serialVersionUID = 498827436606239861L;
-//	private static final long serialVersionUID=1;
-	private static final String JOptionPanel = null;
 	private Point startPoint=new Point(0,0);
 	private Point endPoint=new Point(0,0);
 	private Color color = Color.black;
@@ -39,25 +33,21 @@ public class PaintPanel extends JPanel implements MouseListener,MouseMotionListe
 	private int ShapeType;
 	private String input;
 	private Point SMoved;
-	public int index=-1;
+	private AffineTransform trans=new AffineTransform();
+	private double sx=1;
+	private double sy=1;
+	private int index=-1;
 	public ArrayList<Shapes> listShape=new ArrayList<Shapes>();
-//  ate String ;
-//	private HashMap<Integer,Shape> ShapeType=new  HashMap<Integer,Shape>();
-	public PaintPanel(){
+	public PaintPanel()
+	{
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
 		this.addKeyListener(this);
 	}
 	@Override
-	public void paint(Graphics g) {
-		// TODO Auto-generated method stub
-		super.paint(g);
-//		Dimension size = getSize();
-//		int width = size.width;
-//		int height = size.height;
-//		g.setColor(Color.white);
-//		g.fillRect(0, 0, width, height);
-		
+	public void paint(Graphics g)
+	{
+		super.paint(g);		
 		for(Shapes s:listShape)
 		{
 			s.draw(g);
@@ -65,7 +55,7 @@ public class PaintPanel extends JPanel implements MouseListener,MouseMotionListe
 		if(Pressed){
 			switch(ShapeType){
 			case 1:
-				new line(this.startPoint,this.endPoint,this.color,this.basicStroke).draw(g);
+				new line(this.startPoint,this.endPoint,this.color,this.basicStroke,this.trans).draw(g);
 				break;
 			case 2:
 				new Rectangle(this.startPoint,this.endPoint,this.color,this.basicStroke).draw(g);
@@ -73,50 +63,44 @@ public class PaintPanel extends JPanel implements MouseListener,MouseMotionListe
 			case 3:
 				new Circle(this.startPoint,this.endPoint,this.color,this.basicStroke).draw(g);
 				break;	
-			case 4:
-				
-//				new textbox().text.draw(g);
-//				Text text=new Text(this.startPoint,this.endPoint,this.color);
-//				text.draw(g);
-//				text.setString(input);
+			case 4:				
 				new Text(this.startPoint,this.endPoint,this.color,input,this.basicStroke).draw(g);
-//				text.draw(g); 
-//				listShape.add(text);
 				break;
 			}
 		}
 	}
 	
-
 	public void setShape(int ShapeType)
 	{
 		this.ShapeType=ShapeType;
-	}
-	public void getInput(){
+	}	
+	public void getInput()
+	{
 		this.input=JOptionPane.showInputDialog("«Î ‰»ÎŒƒ◊÷");
 	}
-	public void savePaint(){
+	public void savePaint()
+	{
 		fileClass save=new fileClass(CAD.cad ,this);
 		save.SaveFile();
 		repaint();
 	}
-	public void openPaint(){
+	public void openPaint()
+	{
 		fileClass open=new fileClass(CAD.cad ,this);
 		open.OpenFile();
 		repaint();
 	}
-	public void setColor(Color color) {
+	public void setColor(Color color) 
+	{
 		this.color = color;
 	}
-//	public void drawLine(Graphics g){
-//		new line(this.startPoint,this.endPoint,this.color,this.basicStroke).draw(g);	
-//	}
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
 	}
 	@Override
-	public void keyPressed(KeyEvent e) {
+	public void keyPressed(KeyEvent e) 
+	{
 		// TODO Auto-generated method stub
 		if(e.getKeyCode()==KeyEvent.VK_LEFT){		
 			f=(float) (0.8*f);
@@ -126,6 +110,10 @@ public class PaintPanel extends JPanel implements MouseListener,MouseMotionListe
 			f=(float) (1.2*f);
 			changeStroke(f);
 		}
+		if(e.getKeyCode()==KeyEvent.VK_UP){
+			sx=1.1*sx;
+			changeSize(sx,sy);
+		}
 		if(e.getKeyCode()==KeyEvent.VK_DELETE){
 			listShape.remove(index);
 			repaint();
@@ -134,18 +122,16 @@ public class PaintPanel extends JPanel implements MouseListener,MouseMotionListe
 	}
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 	}
 	@Override
-	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
+	public void mouseDragged(MouseEvent e) 
+	{
 		this.endPoint=e.getPoint();
 		this.repaint();
-		if(Selected){
-//			this.startPoint=e.getPoint();
+		if(Selected)
+		{
 			moveShape(e);
-	//		index=-1;
 		}
 	}
 	@Override
@@ -154,9 +140,8 @@ public class PaintPanel extends JPanel implements MouseListener,MouseMotionListe
 
 	}
 	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub	
-//		Shapes s=null;
+	public void mouseClicked(MouseEvent e) 
+	{
 		for(index=0;index<listShape.size();index++)
 		{
 			Shapes s=listShape.get(index);
@@ -167,11 +152,10 @@ public class PaintPanel extends JPanel implements MouseListener,MouseMotionListe
 			}
 			unSelected();
 		}
-	}
-	
+	}	
 	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
+	public void mousePressed(MouseEvent e)
+	{
 		this.startPoint=e.getPoint();
 		this.Pressed = true;
 		if(Selected){
@@ -179,13 +163,13 @@ public class PaintPanel extends JPanel implements MouseListener,MouseMotionListe
 		}
 	} 
 	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
+	public void mouseReleased(MouseEvent e)
+	{
 		this.endPoint=e.getPoint();
 		this.Pressed = false;
 		switch(ShapeType){
 		case 1:
-			listShape.add(new line(this.startPoint,this.endPoint,this.color,this.basicStroke));
+			listShape.add(new line(this.startPoint,this.endPoint,this.color,this.basicStroke,this.trans));
 			break;
 		case 2:
 			listShape.add(new Rectangle(this.startPoint,this.endPoint,this.color,this.basicStroke));
@@ -211,27 +195,34 @@ public class PaintPanel extends JPanel implements MouseListener,MouseMotionListe
 		// TODO Auto-generated method stub
 		
 	}
-	public void changeColor(Color color){
-		if(Selected){
-		//	Shapes s=listShape.remove(index);
+	public void changeColor(Color color)
+	{
+		if(Selected)
+		{
 			Shapes s=listShape.get(index);
 			s.SetColor(color);
-		//	listShape.remove(index);
-		//	listShape.add(s);
 			this.repaint();
 		}
 	}
-	public void changeStroke(float f){
-		if(Selected){
-		//	Shapes s=listShape.remove(index);
+	public void changeStroke(float f)
+	{
+		if(Selected)
+		{
 			Shapes s=listShape.get(index);
 			s.SetStroke(f);
-		//	listShape.remove(index);
-		//	listShape.add(index,s);
 			this.repaint();
 	    }
 	}
-	public void moveShape(MouseEvent e){
+	public void changeSize(double sx,double sy)
+	{
+		if(Selected){
+			Shapes s=listShape.get(index);
+			s.SetScale(sx, sy);
+			this.repaint();
+		}
+	}
+	public void moveShape(MouseEvent e)
+	{
 		Shapes s=listShape.remove(index);		
 		int xd=e.getX()-SMoved.x;
 		int yd=e.getY()-SMoved.y;
@@ -243,8 +234,8 @@ public class PaintPanel extends JPanel implements MouseListener,MouseMotionListe
 		SMoved=e.getPoint();
 		this.repaint();
 	}
-	public void unSelected(){
+	public void unSelected()
+	{
 		this.Selected=false;
 	}
-
 }
