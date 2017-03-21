@@ -55,7 +55,7 @@ public class PaintPanel extends JPanel implements MouseListener,MouseMotionListe
 		if(Pressed){
 			switch(ShapeType){
 			case 1:
-				new line(this.startPoint,this.endPoint,this.color,this.basicStroke,this.trans).draw(g);
+				new line(this.startPoint,this.endPoint,this.color,this.basicStroke).draw(g);
 				break;
 			case 2:
 				new Rectangle(this.startPoint,this.endPoint,this.color,this.basicStroke).draw(g);
@@ -169,7 +169,7 @@ public class PaintPanel extends JPanel implements MouseListener,MouseMotionListe
 		this.Pressed = false;
 		switch(ShapeType){
 		case 1:
-			listShape.add(new line(this.startPoint,this.endPoint,this.color,this.basicStroke,this.trans));
+			listShape.add(new line(this.startPoint,this.endPoint,this.color,this.basicStroke));
 			break;
 		case 2:
 			listShape.add(new Rectangle(this.startPoint,this.endPoint,this.color,this.basicStroke));
